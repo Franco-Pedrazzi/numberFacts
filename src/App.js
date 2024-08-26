@@ -3,6 +3,8 @@ import { useState } from 'react';
 
 function App() {
 
+  const [NumberData, setNumberData] = useState("");
+  const [dateData, setDateData] = useState("")
   const [number, setNumber] = useState(0);
   const [date, setDate] = useState({
     day: 0,
@@ -10,8 +12,14 @@ function App() {
     year: 0
   })
 
-  const handleNumberChange = (event) => setNumber(event.target.value)
-
+  const handleNumberChange = (event) => {
+    setNumber(event.target.value)
+  }
+  const FindNumberData=()=>{
+    fetch("http://numbersapi.com/"+number+"?json")
+    .then((response)=>response.json())
+    .then((json)=>setNumberData(json))
+  }
   const handleDateChange = (event) => {
     const inputDate = event.target.value;
     const [inputYear, inputMonth, inputDay] = inputDate.split("-")
@@ -21,7 +29,13 @@ function App() {
       year: inputYear
     });
   }
-
+  const FindDate=()=>{
+    console.log(date)
+    fetch("http://numbersapi.com/"+date["day"]+"/"+date["month"]+"/date")
+    .then((response)=> console.log(response.json()))
+    .then((json)=>setNumberData(json))
+    console.log(dateData)
+  }
 
   return (
     <main>
@@ -31,16 +45,16 @@ function App() {
       <section>
         <h2>Obtener un dato sobre un número</h2>
         <input type="number" onChange={handleNumberChange} />
-        <button>Enviar</button>
-        <p className="result-box"></p>
+        <button onClick={FindNumberData}>Enviar</button>
+        <p className="result-box">{NumberData.text}</p>
       </section>
 
       <section>
         <h2>Obtener un dato sobre una fecha</h2>
         <input type="date" onChange={handleDateChange} />
-        <button>Enviar</button>
+        <button onClick={FindDate}>Enviar</button>
         <h3>Dato sobre la fecha</h3>
-        <p className="result-box"></p>
+        <p className="result-box">{dateData.text}</p>
         <h3>Dato sobre el año</h3>
         <p className="result-box"></p>
       </section>
